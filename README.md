@@ -1,5 +1,30 @@
 # linux-80211n-csitool-test
 
+## 기반
+https://github.com/Management001/IEEE-802.11n-CSI-Camera-Synchronization-Toolkit
+
+Ubnuntu version : 18.04.0 lts 
+Kernel version : 4.15.0-20-generic
+우분투 설치시 인터넷 연결 모두 제거. 이후, 자동 업데이트 해체 상태에서 아래와 같이 진행.
+(인터넷 연결시 Kernel 4.15.0.-213-generic 버전으로 강제 업데이트)
+
+## 참고 사이트
+
+### 18.04.0 lts Download site
+https://old-releases.ubuntu.com/releases/18.04/
+
+### CSI part
+https://hackmd.io/@linjiayou/HJUOPkwjF
+  https://github.com/spanev/linux-80211n-csitool
+  https://github.com/dhalperi/linux-80211n-csitool-supplementary
+https://www-sop.inria.fr/teams/diana/orion/
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/refs/
+
+### Camera part
+https://kwonkai.tistory.com/128
+
+카메라 연동 오류 존재. 현재는 파악중.
+
 ```bash
 
 sudo apt-get install build-essential linux-headers-$(uname -r) git-core
