@@ -15,9 +15,13 @@ https://old-releases.ubuntu.com/releases/18.04/
 
 ### CSI part
 https://hackmd.io/@linjiayou/HJUOPkwjF
+
   https://github.com/spanev/linux-80211n-csitool
+  
   https://github.com/dhalperi/linux-80211n-csitool-supplementary
+  
 https://www-sop.inria.fr/teams/diana/orion/
+
 https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/refs/
 
 ### Camera part
