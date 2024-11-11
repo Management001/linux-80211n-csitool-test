@@ -4,9 +4,16 @@
 https://github.com/Management001/IEEE-802.11n-CSI-Camera-Synchronization-Toolkit
 
 Ubnuntu version : 18.04.0 lts 
+
 Kernel version : 4.15.0-20-generic
+
+NIC 5300 를 장착한 상태.
+
 우분투 설치시 인터넷 연결 모두 제거. 이후, 자동 업데이트 해체 상태에서 아래와 같이 진행.
+
 (인터넷 연결시 Kernel 4.15.0.-213-generic 버전으로 강제 업데이트)
+
+
 
 ## 참고 사이트
 
@@ -57,6 +64,10 @@ sudo ln -s /usr/bin/gcc-8 /usr/bin/gcc
 
 sudo ln -s /usr/bin/g++-8 /usr/bin/g++
 
+ls -l /usr/bin/gcc /usr/bin/g++
+
+sudo apt update
+
 sudo apt-get install gcc make linux-headers-$(uname -r) git-core
 
 git clone https://github.com/spanev/linux-80211n-csitool.git
@@ -84,6 +95,9 @@ sudo cp linux-80211n-csitool-supplementary/firmware/iwlwifi-5000-2.ucode.sigcomm
 sudo ln -s iwlwifi-5000-2.ucode.sigcomm2010 /lib/firmware/iwlwifi-5000-2.ucode
 
 make -C linux-80211n-csitool-supplementary/netlink
+
+
+자동화 sh 파일 만드는 중.
 
 ###
 
