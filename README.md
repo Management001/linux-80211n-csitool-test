@@ -38,7 +38,7 @@ https://kwonkai.tistory.com/128
 
 ```bash
 
-#CSI 데이터를 추출하기 위한 설치단계
+# CSI 데이터를 추출하기 위한 설치단계
 
 sudo apt-get install build-essential linux-headers-$(uname -r) git-core
 
@@ -98,42 +98,94 @@ sudo ln -s iwlwifi-5000-2.ucode.sigcomm2010 /lib/firmware/iwlwifi-5000-2.ucode
 
 make -C linux-80211n-csitool-supplementary/netlink
 
+---------------------------------------------------------------------------------------------------
+
+# CSI 추출 파일 및 카메라 동기화를 위한 OpenCV 설치단계
+
+cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/camera_tool
+
+unzip opencv-2.4.13.6.zip
+
+cd opencv-2.4.13.6/install
+
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
+
+cmake ..
+
+make
+
+sudo make install
+
+sudo gedit /etc/ld.so.conf.d/opencv.conf
+
+GEDIT에서 아래 한 줄 작성 및 저장
+
+/usr/local/lib
+
+sudo ldconfig
+
+sudo gedit /etc/bash.bashrc
+
+GEDIT에서 아래 두 줄 작성 및 저장
+
+PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
+export PKG_CONFIG_PATH
+
+sudo reboot
+
+---------------------------------------------------------------------------------------------------
+# Compile user-application:
+
+cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/supplementary/netlink
+
+GEDIT에서 아래 한 줄 작성 및 저장
+
+/usr/local/lib
+
+make
+
 
 해당 과정을 거치고 wifi로부터 CSI데이터를 받을 수 있는지만 체크
 
+
 카메라 확인
+
 ls -ltr /dev/video*
 
 설치
+
 sudo apt-get install v4l-utils -y
 
 v4l2-ctl --list-devices
 
 이후, 카메라 설치를 위한 Opencv단계를 거침
+
 sudo apt install vlc
 
 설치된 vlc media player를 열고 'Capture Device'에서 카메라 장치 ex)'/dev/vidio0' 선택
 
 재생버튼을 눌러 카메라가 정상적으로 작동하는지 확인
 
+
+
 다시 한 번, <#CSI 데이터를 추출하기 위한 설치단계>를 수행
 
 
+---------------------------------------------------------------------------------------------------
+# 추출 단계
 
-자동화 sh 파일 만드는 중. 실패
+= 와이파이 연결확인
+iw dev wlp1s0 link
 
-###
 
 sudo modprobe -r iwlwifi mac80211
 
 sudo modprobe iwlwifi connector_log=0x1
 
-##
 
 sudo ls /sys/kernel/debug/ieee80211/phy0/netdev:wlp1s0/stations/
 
 sudo cat /sys/kernel/debug/ieee80211/phy0/netdev:wlp1s0/stations/XX:XX:XX:XX:XX:XX/rate_scale_table
-
 
 
 echo 0x4007 | sudo tee /sys/kernel/debug/ieee80211/phy0/netdev:wlp1s0/stations/XX:XX:XX:XX:XX:XX/rate_scale_table
@@ -143,15 +195,21 @@ echo 0x4007 | sudo tee /sys/kernel/debug/ieee80211/phy0/iwlwifi/iwldvm/debug/bca
 echo 0x4007 | sudo tee /sys/kernel/debug/ieee80211/phy0/iwlwifi/iwldvm/debug/monitor_tx_rate
 
 
-
 sudo dhclient wlp1s0
 
 
 ##
 
-sudo linux-80211n-csitool-supplementary/netlink/log_to_file csi.dat
-
+[1]
 # On another terminal, type:
 ping 192.168.0.101 -i 0.5
+
+[2]
+# On another terminal, type:
+cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/supplementary/netlink/log_to_file test.dat
+
+[3]
+# On another terminal, type:
+sudo linux-80211n-csitool-supplementary/netlink/log_to_file csi.dat
 
 ```
