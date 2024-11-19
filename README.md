@@ -38,6 +38,8 @@ https://kwonkai.tistory.com/128
 
 ```bash
 
+#CSI 데이터를 추출하기 위한 설치단계
+
 sudo apt-get install build-essential linux-headers-$(uname -r) git-core
 
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test
@@ -97,7 +99,28 @@ sudo ln -s iwlwifi-5000-2.ucode.sigcomm2010 /lib/firmware/iwlwifi-5000-2.ucode
 make -C linux-80211n-csitool-supplementary/netlink
 
 
-자동화 sh 파일 만드는 중.
+해당 과정을 거치고 wifi로부터 CSI데이터를 받을 수 있는지만 체크
+
+카메라 확인
+ls -ltr /dev/video*
+
+설치
+sudo apt-get install v4l-utils -y
+
+v4l2-ctl --list-devices
+
+이후, 카메라 설치를 위한 Opencv단계를 거침
+sudo apt install vlc
+
+설치된 vlc media player를 열고 'Capture Device'에서 카메라 장치 ex)'/dev/vidio0' 선택
+
+재생버튼을 눌러 카메라가 정상적으로 작동하는지 확인
+
+다시 한 번, <#CSI 데이터를 추출하기 위한 설치단계>를 수행
+
+
+
+자동화 sh 파일 만드는 중. 실패
 
 ###
 
