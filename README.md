@@ -15,6 +15,14 @@ NIC 5300 를 장착한 상태.
 
 ### Up square board 설치에 경우... 참고사항
 
+NIC CARD 장착시 우분투 설치가 안되거나 강제 제부팅 현상이 발생.
+
+Ubnuntu version : 18.04.0 lts 가 아닌 18.04.5 lts 으로 설치 이후 커널을 다운그레이드 진행.
+
+사용한 커널 버전
+
+Linux 4.15.0-137-generic
+
 커널 변경 방법
 https://andrewpage.tistory.com/411
 
