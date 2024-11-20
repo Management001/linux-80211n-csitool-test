@@ -13,7 +13,10 @@ NIC 5300 를 장착한 상태.
 
 (인터넷 연결시 Kernel 4.15.0.-213-generic 버전으로 강제 업데이트)
 
+### Up square board 설치에 경우... 참고사항
 
+커널 변경 방법
+https://andrewpage.tistory.com/411
 
 ## 참고 사이트
 
