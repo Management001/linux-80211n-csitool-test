@@ -1,7 +1,5 @@
 # linux-80211n-csitool-test
 
-test1
-
 ## 기반
 https://github.com/Management001/IEEE-802.11n-CSI-Camera-Synchronization-Toolkit
 
@@ -47,188 +45,42 @@ https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/refs
 ### Camera part
 https://kwonkai.tistory.com/128
 
-카메라 연동 오류 존재. 현재는 파악중.
 
-```bash
 
-# CSI 데이터를 추출하기 위한 설치단계
 
-sudo apt-get install build-essential linux-headers-$(uname -r) git-core
 
-sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+# IEEE-802.11n-CSI-Camera-Synchronization-Toolkit
+* This repository is a part of an RF-based mobility detection and tracking project.
+* The goal of our research is to develop technology to recognize and track objects beyond walls using solely WiFi signals in the IEEE standards.
+  
+The purpose of this repository is to provide support for building the CSI-enabled **TP-Link AC1750** Wi-Fi drivers for Intel Wireless Link **Intel 5300 NIC** adapters on Linux distributions with **Unbuntu 14.01** versions. At this point, this code has been tested on Ubuntu **14.01**, **16.04**, and **18.04**.
 
-sudo apt-get update
+The code presented here comprises a modified version of the Linux kernel, such as the firmware command, and error lines of the original baseline. The modifications were made by examining the code provided by [dhalperi/linux-80211n-csitool](https://github.com/dhalperi/linux-80211n-csitool) and adapting them to more recent Linux kernel versions **- iwlwifi** and **wlp1s0** modules. The building and installation instructions were taken from [the original Linux 802.11n CSI Tool website](https://dhalperi.github.io/linux-80211n-csitool/) and adapted accordingly. Moreover, I referred to the synchronization method between CSI and Camera from [CSI-Tool-Camera-Shooting](https://github.com/qiyinghua/CSI-Tool-Camera-Shooting).
 
-sudo apt-get install gcc-8 g++-8
+Additionally, there have been initial toolkit issues discussed among mobility detection researchers who use WiFi signals and Channel State Information (CSI). To this end, we provide a calculation function **newly_csi_analyzer.m** of amplitude and phase, and signal processing from the acquired CSI samples. Herein, I referred to novel approaches [DensePose From WiFi](https://arxiv.org/abs/2301.00250) and [Can WiFi Estimate Person Pose?](https://arxiv.org/abs/1904.00277).
 
-sudo apt-get install libgtk2.0-dev
+# Project Members
+#### [Youngwoo Oh (M.S. student, Project leader from May 2023 to Feb. 2024)](https://ohyoungwoo.com/)
+- Integrated two sensing values including RF signals and captured video from the router and Camera by developing these Linux toolkit codes.
+- Signal processing, and project software and hardware configuration.
 
-sudo apt-get install pkg-config 
+#### [Jungtae Kang (Undergraduate student, Project follower)](https://kangjeongtae.com/)
+- Supporting the generation of CSI samples and Camera images.
+- Writing [Winter Conference on Korea Information and Communications Society (KICS) conference](https://conf.kics.or.kr/) papers named *Collection and analysis of CSI in IEEE 802.11n wireless LAN environment for WiFi signal-based human mobility detection* and *Design of WiFi signal-based Multi-modal KNN deep learning approaches for improving anomaly object detection and classification methods*.
+- He will follow up on this *Novel multi-modal approaches-based object detection/tracking/recognition methods* in his future research.
+  
+#### Islam Helemy (Ph.D. student, Project member)
+- Responsible for the development of the Multi-modal AI and the pre-processing to generate training data pairs (CSI samples-captured images).
+- He will receive a *project leader* position on this future project after Feb. 2024.
 
-sudo apt-get install cmake
+#### Iftikhar Ahmad (Ph.D. student, Project member)
+- Focused on developing the Teacher network in the multi-modal AI model.
 
-sudo apt update
+#### Manal Mosharaf (M.S. student, Project member)
+- Engaged in developing the Student network in the multi-modal AI model.
 
-ls -l /usr/bin/gcc /usr/bin/g++
-
-sudo rm /usr/bin/gcc
-
-sudo rm /usr/bin/g++
-
-sudo ln -s /usr/bin/gcc-8 /usr/bin/gcc
-
-sudo ln -s /usr/bin/g++-8 /usr/bin/g++
-
-ls -l /usr/bin/gcc /usr/bin/g++
-
-sudo apt update
-
-sudo apt-get install gcc make linux-headers-$(uname -r) git-core
-
-git clone https://github.com/spanev/linux-80211n-csitool.git
-
-cd linux-80211n-csitool
-
-CSITOOL_KERNEL_TAG=csitool-$(uname -r | cut -d . -f 1-2)
-
-git checkout ${CSITOOL_KERNEL_TAG}
-
-make -j `nproc` -C /lib/modules/$(uname -r)/build M=$(pwd)/drivers/net/wireless/intel/iwlwifi modules
-
-sudo make -C /lib/modules/$(uname -r)/build M=$(pwd)/drivers/net/wireless/intel/iwlwifi INSTALL_MOD_DIR=updates modules_install
-
-sudo depmod
-
-cd ..
-
-git clone https://github.com/dhalperi/linux-80211n-csitool-supplementary.git
-
-for file in /lib/firmware/iwlwifi-5000-*.ucode; do sudo mv $file $file.orig; done
-
-sudo cp linux-80211n-csitool-supplementary/firmware/iwlwifi-5000-2.ucode.sigcomm2010 /lib/firmware/
-
-sudo ln -s iwlwifi-5000-2.ucode.sigcomm2010 /lib/firmware/iwlwifi-5000-2.ucode
-
-make -C linux-80211n-csitool-supplementary/netlink
-
----------------------------------------------------------------------------------------------------
-
-# CSI 추출 파일 및 카메라 동기화를 위한 OpenCV 설치단계
-
-cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/camera_tool
-
-unzip opencv-2.4.13.6.zip
-
-cd opencv-2.4.13.6/install
-
-cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
-
-cmake ..
-
-make
-
-sudo make install
-
-sudo gedit /etc/ld.so.conf.d/opencv.conf
-
-GEDIT에서 아래 한 줄 작성 및 저장
-
-/usr/local/lib
-
-sudo ldconfig
-
-sudo gedit /etc/bash.bashrc
-
-GEDIT에서 아래 두 줄 작성 및 저장
-
-PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
-export PKG_CONFIG_PATH
-
-sudo reboot
-
----------------------------------------------------------------------------------------------------
-# Compile user-application:
-
-cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/supplementary/netlink
-
-GEDIT에서 아래 한 줄 작성 및 저장
-
-/usr/local/lib
-
-make
-
-
-해당 과정을 거치고 wifi로부터 CSI데이터를 받을 수 있는지만 체크
-
-
-카메라 확인
-
-ls -ltr /dev/video*
-
-설치
-
-sudo apt-get install v4l-utils -y
-
-v4l2-ctl --list-devices
-
-이후, 카메라 설치를 위한 Opencv단계를 거침
-
-sudo apt install vlc
-
-설치된 vlc media player를 열고 'Capture Device'에서 카메라 장치 ex)'/dev/vidio0' 선택
-
-재생버튼을 눌러 카메라가 정상적으로 작동하는지 확인
-
-
-
-다시 한 번, <#CSI 데이터를 추출하기 위한 설치단계>를 수행
-
-
----------------------------------------------------------------------------------------------------
-# 추출 단계
-
-= 와이파이 연결확인
-iw dev wlp1s0 link
-
-
-sudo modprobe -r iwlwifi mac80211
-
-sudo modprobe iwlwifi connector_log=0x1
-
-
-sudo ls /sys/kernel/debug/ieee80211/phy0/netdev:wlp1s0/stations/
-
-sudo cat /sys/kernel/debug/ieee80211/phy0/netdev:wlp1s0/stations/XX:XX:XX:XX:XX:XX/rate_scale_table
-
-
-echo 0x4007 | sudo tee /sys/kernel/debug/ieee80211/phy0/netdev:wlp1s0/stations/XX:XX:XX:XX:XX:XX/rate_scale_table
-
-echo 0x4007 | sudo tee /sys/kernel/debug/ieee80211/phy0/iwlwifi/iwldvm/debug/bcast_tx_rate
-
-echo 0x4007 | sudo tee /sys/kernel/debug/ieee80211/phy0/iwlwifi/iwldvm/debug/monitor_tx_rate
-
-
-sudo dhclient wlp1s0
-
-
-##
-
-[1]
-# On another terminal, type:
-ping 192.168.0.101 -i 0.5
-
-[2]
-# On another terminal, type:
-cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/supplementary/netlink/log_to_file test.dat
-
-[3]
-# On another terminal, type:
-sudo linux-80211n-csitool-supplementary/netlink/log_to_file csi.dat
-
-```
-
----
-
+# Toolkit Demonstration
+Will be upload
 
 # 1. Installation instructions of integrated CSI toolkit
 ## (1). Kernel version:
