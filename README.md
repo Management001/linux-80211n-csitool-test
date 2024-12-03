@@ -227,6 +227,56 @@ sudo linux-80211n-csitool-supplementary/netlink/log_to_file csi.dat
 
 ---
 
+
+```ruby
+# 1단계 기본 설치
+```
+```ruby
+sudo apt-get install build-essential linux-headers-$(uname -r) git-core
+```
+```ruby
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+```
+```ruby
+sudo apt-get update
+```
+```ruby
+sudo apt-get install gcc-8 g++-8
+```
+```ruby
+sudo apt-get install libgtk2.0-dev
+```
+```ruby
+sudo apt-get install pkg-config 
+```
+```ruby
+sudo apt-get install cmake
+```
+```ruby
+sudo apt update
+```
+```ruby
+ls -l /usr/bin/gcc /usr/bin/g++
+```
+```ruby
+sudo rm /usr/bin/gcc
+```
+```ruby
+sudo rm /usr/bin/g++
+```
+```ruby
+sudo ln -s /usr/bin/gcc-8 /usr/bin/gcc
+```
+```ruby
+sudo ln -s /usr/bin/g++-8 /usr/bin/g++
+```
+```ruby
+ls -l /usr/bin/gcc /usr/bin/g++
+```
+```ruby
+sudo apt update
+```
+
 # CSI 추출 파일 및 카메라 동기화를 위한 OpenCV 설치단계
 
 ```ruby
@@ -275,3 +325,87 @@ export PKG_CONFIG_PATH
 ```ruby
 sudo reboot
 ```
+
+# 커널 변경이 필요한 경우
+
+```ruby
+sudo apt-get install linux-image-4.15.0-20-generic
+sudo apt-get install linux-headers-4.15.0-20-generic
+sudo apt-get install linux-modules-4.15.0-20-generic
+sudo apt-get install linux-modules-extra-4.15.0-20-generic
+```
+
+GRUB 설정
+
+```ruby
+sudo gedit /etc/default/grub
+```
+... 중간 생략 ...
+ 
+## 설치한 linux kernel version 이름 설정
+GRUB_DEFAULT='Advanced options for Ubuntu>Ubuntu, with Linux 4.15.0-20-generic'
+ 
+## 아래와 같이 설정하면, 3초 동안 countdown하는 화면이 나온다.
+## countdown하는 동안에 'ESC or F4 or SHIFT' 키를 누르면 GRUB 부팅 설정이 나온다.
+## 이때 Default kernel version이 아닌 다른 kernel version을 고를 수 있다.
+GRUB_TIMEOUT_STYLE=countdown
+GRUB_TIMEOUT=3
+ 
+... 중간 생략 ...
+update-grub 명령어 수행
+
+$ update-grub
+ 
+Sourcing file `/etc/default/grub'
+Generating grub configuration file ...
+Found linux image: /boot/vmlinuz-4.15.0-20-generic
+
+$ reboot
+
+## [ESC] 또는 [SHIFT] 또는 [F4] 키를 눌러서 원하는 Linux kernel version을 선택
+
+## # CSI 데이터를 추출하기 위한 설치단계
+
+```ruby
+sudo apt-get install gcc make linux-headers-$(uname -r) git-core
+```
+```ruby
+git clone https://github.com/spanev/linux-80211n-csitool.git
+```
+```ruby
+cd linux-80211n-csitool
+```
+```ruby
+CSITOOL_KERNEL_TAG=csitool-$(uname -r | cut -d . -f 1-2)
+```
+```ruby
+git checkout ${CSITOOL_KERNEL_TAG}
+```
+```ruby
+make -j `nproc` -C /lib/modules/$(uname -r)/build M=$(pwd)/drivers/net/wireless/intel/iwlwifi modules
+```
+```ruby
+sudo make -C /lib/modules/$(uname -r)/build M=$(pwd)/drivers/net/wireless/intel/iwlwifi INSTALL_MOD_DIR=updates modules_install
+```
+```ruby
+sudo depmod
+```
+```ruby
+cd ..
+```
+```ruby
+git clone https://github.com/dhalperi/linux-80211n-csitool-supplementary.git
+```
+```ruby
+for file in /lib/firmware/iwlwifi-5000-*.ucode; do sudo mv $file $file.orig; done
+```
+```ruby
+sudo cp linux-80211n-csitool-supplementary/firmware/iwlwifi-5000-2.ucode.sigcomm2010 /lib/firmware/
+```
+```ruby
+sudo ln -s iwlwifi-5000-2.ucode.sigcomm2010 /lib/firmware/iwlwifi-5000-2.ucode
+```
+```ruby
+make -C linux-80211n-csitool-supplementary/netlink
+```
+
