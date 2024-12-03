@@ -335,36 +335,49 @@ sudo apt-get install linux-modules-4.15.0-20-generic
 sudo apt-get install linux-modules-extra-4.15.0-20-generic
 ```
 
-GRUB 설정
+## GRUB 설정
 
 ```ruby
 sudo gedit /etc/default/grub
 ```
-... 중간 생략 ...
- 
-## 설치한 linux kernel version 이름 설정
-GRUB_DEFAULT='Advanced options for Ubuntu>Ubuntu, with Linux 4.15.0-20-generic'
- 
-## 아래와 같이 설정하면, 3초 동안 countdown하는 화면이 나온다.
-## countdown하는 동안에 'ESC or F4 or SHIFT' 키를 누르면 GRUB 부팅 설정이 나온다.
-## 이때 Default kernel version이 아닌 다른 kernel version을 고를 수 있다.
-GRUB_TIMEOUT_STYLE=countdown
-GRUB_TIMEOUT=3
- 
-... 중간 생략 ...
-update-grub 명령어 수행
 
-$ update-grub
- 
-Sourcing file `/etc/default/grub'
-Generating grub configuration file ...
-Found linux image: /boot/vmlinuz-4.15.0-20-generic
+```
+  ... Omitted parts ...
 
-$ reboot
+  ## Setting the name of the installed Linux kernel version
+  GRUB_DEFAULT='Advanced options for Ubuntu>Ubuntu, with Linux 4.15.0-20-generic'
 
-## [ESC] 또는 [SHIFT] 또는 [F4] 키를 눌러서 원하는 Linux kernel version을 선택
+  ## With the settings below, a countdown screen will appear for 3 seconds.
+  ## During the countdown, pressing the 'ESC', 'F4', or 'SHIFT' key will bring up the GRUB boot menu.
+  ## At this point, you can choose a kernel version other than the default kernel version.
+  GRUB_TIMEOUT_STYLE=countdown
+  GRUB_TIMEOUT=3
 
-## # CSI 데이터를 추출하기 위한 설치단계
+  ... Omitted parts ...
+```
+
+## update-grub 명령어 수행
+
+```ruby
+sudo update-grub
+```
+
+```
+  Sourcing file `/etc/default/grub'
+  Generating grub configuration file ...
+  Found linux image: /boot/vmlinuz-4.15.0-20-generic
+
+  ... Omitted parts ...
+```
+
+```ruby
+reboot
+```
+
+## Press [ESC], [SHIFT], or [F4] to select the desired Linux kernel version.
+
+
+# CSI 데이터를 추출하기 위한 설치단계
 
 ```ruby
 sudo apt-get install gcc make linux-headers-$(uname -r) git-core
@@ -414,38 +427,35 @@ make -C linux-80211n-csitool-supplementary/netlink
 ```ruby
 cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/supplementary/netlink
 ```
-GEDIT에서 아래 한 줄 작성 및 저장
+## GEDIT에서 아래 한 줄 작성 및 저장
 ```ruby
 /usr/local/lib
 ```
 ```ruby
 make
 ```
+## 해당 과정을 거치고 wifi로부터 CSI데이터를 받을 수 있는지만 체크
 
-해당 과정을 거치고 wifi로부터 CSI데이터를 받을 수 있는지만 체크
 
 
-카메라 확인
+## Check your camera device
 ```ruby
 ls -ltr /dev/video*
 ```
 
-설치
+## Install v4l utils and vlc
 ```ruby
 sudo apt-get install v4l-utils -y
 ```
 ```ruby
 v4l2-ctl --list-devices
 ```
-
-이후, 카메라 설치를 위한 Opencv단계를 거침
 ```ruby
 sudo apt install vlc
 ```
 
-설치된 vlc media player를 열고 'Capture Device'에서 자신의 카메라 장치 ex)'/dev/vidio0' 선택
-
-재생버튼을 눌러 카메라가 정상적으로 작동하는지 확인
+## Open the installed vlc media player and select your camera device ex)'/dev/vidio0' in 'Capture Device'
+## Press the play button to check if the camera is operating normally.
 
 ## 작동 단계
 
