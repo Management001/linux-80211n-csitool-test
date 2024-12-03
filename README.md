@@ -266,7 +266,6 @@ sudo apt update
 ```ruby
 ls -l /usr/bin/gcc /usr/bin/g++
 ```
-
 ```ruby
 sudo rm /usr/bin/gcc
 ```
@@ -286,7 +285,7 @@ ls -l /usr/bin/gcc /usr/bin/g++
 sudo apt update
 ```
 
-## (7). Unzip OpenCV for utlizing the USB camera:
+## (4). Unzip OpenCV for utlizing the USB camera:
 ```ruby
 cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/camera_tool
 ```
@@ -297,7 +296,7 @@ unzip opencv-2.4.13.6.zip
 cd opencv-2.4.13.6/install
 ```
 
-## (8). Compile and install OpenCV:
+## (5). Compile and install OpenCV:
 ```ruby
 cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
 ```
@@ -311,7 +310,7 @@ make
 sudo make install
 ```
 
-## (9). Configuration OpenCV:
+## (6). Configuration OpenCV:
 ```ruby
 sudo gedit /etc/ld.so.conf.d/opencv.conf
 ```
@@ -334,8 +333,8 @@ sudo gedit /etc/bash.bashrc
 sudo reboot
 ```
 
-# 커널 변경이 필요한 경우
-
+## (7). If a kernel change is needed (optional)
+Installing a specific kernel version
 ```ruby
 sudo apt-get install linux-image-4.15.0-20-generic
 sudo apt-get install linux-headers-4.15.0-20-generic
@@ -343,12 +342,10 @@ sudo apt-get install linux-modules-4.15.0-20-generic
 sudo apt-get install linux-modules-extra-4.15.0-20-generic
 ```
 
-## GRUB 설정
-
+GRUB set
 ```ruby
 sudo gedit /etc/default/grub
 ```
-
 ```
   ... Omitted parts ...
 
@@ -364,12 +361,10 @@ sudo gedit /etc/default/grub
   ... Omitted parts ...
 ```
 
-## update-grub 명령어 수행
-
+GRUB update
 ```ruby
 sudo update-grub
 ```
-
 ```
   Sourcing file `/etc/default/grub'
   Generating grub configuration file ...
@@ -377,16 +372,11 @@ sudo update-grub
 
   ... Omitted parts ...
 ```
-
 ```ruby
 reboot
 ```
 
-## Press [ESC], [SHIFT], or [F4] to select the desired Linux kernel version.
-
-
-# CSI 데이터를 추출하기 위한 설치단계
-
+Press [ESC], [SHIFT], or [F4] to select the desired Linux kernel version, such as "Linux 4.15.0-20-generic."
 ```ruby
 sudo apt-get install gcc make linux-headers-$(uname -r) git-core
 ```
@@ -394,7 +384,7 @@ sudo apt-get install gcc make linux-headers-$(uname -r) git-core
 sudo apt update
 ```
 
-## (4). Build and install the modified wireless LAN driver:
+## (8). Build and install the modified wireless LAN driver:
 ```ruby
 git clone https://github.com/spanev/linux-80211n-csitool.git
 ```
@@ -420,7 +410,7 @@ sudo depmod
 cd ..
 ```
 
-## (5). Install the Modified firmware:
+## (9). Install the Modified firmware:
 ```ruby
 git clone https://github.com/dhalperi/linux-80211n-csitool-supplementary.git
 ```
