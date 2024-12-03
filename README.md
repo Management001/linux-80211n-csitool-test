@@ -409,3 +409,89 @@ sudo ln -s iwlwifi-5000-2.ucode.sigcomm2010 /lib/firmware/iwlwifi-5000-2.ucode
 make -C linux-80211n-csitool-supplementary/netlink
 ```
 
+# Compile user-application:
+
+```ruby
+cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/supplementary/netlink
+```
+GEDIT에서 아래 한 줄 작성 및 저장
+```ruby
+/usr/local/lib
+```
+```ruby
+make
+```
+
+해당 과정을 거치고 wifi로부터 CSI데이터를 받을 수 있는지만 체크
+
+
+카메라 확인
+```ruby
+ls -ltr /dev/video*
+```
+
+설치
+```ruby
+sudo apt-get install v4l-utils -y
+```
+```ruby
+v4l2-ctl --list-devices
+```
+
+이후, 카메라 설치를 위한 Opencv단계를 거침
+```ruby
+sudo apt install vlc
+```
+
+설치된 vlc media player를 열고 'Capture Device'에서 자신의 카메라 장치 ex)'/dev/vidio0' 선택
+
+재생버튼을 눌러 카메라가 정상적으로 작동하는지 확인
+
+## 작동 단계
+
+# 추출 단계
+
+= 와이파이 연결확인
+```ruby
+iw dev wlp1s0 link
+```
+```ruby
+sudo modprobe -r iwlwifi mac80211
+```
+```ruby
+sudo modprobe iwlwifi connector_log=0x1
+```
+```ruby
+sudo ls /sys/kernel/debug/ieee80211/phy0/netdev:wlp1s0/stations/
+```
+```ruby
+sudo cat /sys/kernel/debug/ieee80211/phy0/netdev:wlp1s0/stations/XX:XX:XX:XX:XX:XX/rate_scale_table
+```
+```ruby
+echo 0x4007 | sudo tee /sys/kernel/debug/ieee80211/phy0/netdev:wlp1s0/stations/XX:XX:XX:XX:XX:XX/rate_scale_table
+```
+```ruby
+echo 0x4007 | sudo tee /sys/kernel/debug/ieee80211/phy0/iwlwifi/iwldvm/debug/bcast_tx_rate
+```
+```ruby
+echo 0x4007 | sudo tee /sys/kernel/debug/ieee80211/phy0/iwlwifi/iwldvm/debug/monitor_tx_rate
+```
+```ruby
+sudo dhclient wlp1s0
+```
+
+##
+
+[1]
+# On another terminal, type:
+ping 192.168.0.101 -i 0.5
+
+[2]
+# On another terminal, type:
+cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/supplementary/netlink/log_to_file test.dat
+
+[3]
+# On another terminal, type:
+sudo linux-80211n-csitool-supplementary/netlink/log_to_file csi.dat
+
+```
