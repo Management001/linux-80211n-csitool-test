@@ -224,3 +224,54 @@ cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/supplementary/netlink/log_to_
 sudo linux-80211n-csitool-supplementary/netlink/log_to_file csi.dat
 
 ```
+
+---
+
+# CSI 추출 파일 및 카메라 동기화를 위한 OpenCV 설치단계
+
+```ruby
+cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/camera_tool
+```
+```ruby
+unzip opencv-2.4.13.6.zip
+```
+```ruby
+cd opencv-2.4.13.6/install
+```
+```ruby
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
+```
+```ruby
+cmake ..
+```
+```ruby
+make
+```
+```ruby
+sudo make install
+```
+```ruby
+sudo gedit /etc/ld.so.conf.d/opencv.conf
+```
+```ruby
+GEDIT에서 아래 한 줄 작성 및 저장
+```
+```ruby
+/usr/local/lib
+```
+```ruby
+sudo ldconfig
+```
+```ruby
+sudo gedit /etc/bash.bashrc
+```
+```ruby
+GEDIT에서 아래 두 줄 작성 및 저장
+```
+```ruby
+PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
+export PKG_CONFIG_PATH
+```
+```ruby
+sudo reboot
+```
