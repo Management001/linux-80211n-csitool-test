@@ -423,12 +423,13 @@ sudo cp linux-80211n-csitool-supplementary/firmware/iwlwifi-5000-2.ucode.sigcomm
 ```ruby
 sudo ln -s iwlwifi-5000-2.ucode.sigcomm2010 /lib/firmware/iwlwifi-5000-2.ucode
 ```
+
+## (10). Build the userspace logging tool:
 ```ruby
 make -C linux-80211n-csitool-supplementary/netlink
 ```
 
-# Compile user-application:
-
+## (11). Compile user-application:
 ```ruby
 cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/supplementary/netlink
 ```
@@ -442,17 +443,13 @@ Then add the /usr/local/lib command to the file.
 ```ruby
 make
 ```
+Check if CSI data can be received from WiFi (refer to Guide 2-1).
 
-## 해당 과정을 거치고 wifi로부터 CSI데이터를 받을 수 있는지만 체크 (가이드 2-1번이 문제 없이 돌아가는가만 확인)
-
-
-
-## Check your camera device
+## (12). Install v4l utils and vlc
+Check your camera device
 ```ruby
 ls -ltr /dev/video*
 ```
-
-## Install v4l utils and vlc
 ```ruby
 sudo apt-get install v4l-utils -y
 ```
@@ -462,9 +459,7 @@ v4l2-ctl --list-devices
 ```ruby
 sudo apt install vlc
 ```
-
-## Open the installed vlc media player and select your camera device ex)'/dev/vidio0' in 'Capture Device'
-## Press the play button to check if the camera is operating normally.
+Open the installed vlc media player and select your camera device ex)'/dev/vidio0' in 'Capture Device'. Press the play button to check if the camera is operating normally.
 
 # 2. Guideline Operation of integrated CSI toolkit
 ## (1). setting of the WiFi router and wireless LAN card:
