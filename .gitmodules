@@ -1,0 +1,3 @@
+[submodule "linux-80211n-csitool-supplementary"]
+	path = linux-80211n-csitool-supplementary
+	url = https://github.com/dhalperi/linux-80211n-csitool-supplementary.git
