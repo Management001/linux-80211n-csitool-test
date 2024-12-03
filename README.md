@@ -228,9 +228,14 @@ sudo linux-80211n-csitool-supplementary/netlink/log_to_file csi.dat
 ---
 
 
+# 1. Installation instructions of integrated CSI toolkit
+## (1). Kernel version:
+Before proceeding further, you need to check the version of your kernel. It should be **4.15**, otherwise, the commands below won't work. The following command will print that information:
 ```ruby
-# 1단계 기본 설치
+uname -r
 ```
+
+## (2). First download the essential packages:
 ```ruby
 sudo apt-get install build-essential linux-headers-$(uname -r) git-core
 ```
@@ -240,6 +245,7 @@ sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 ```ruby
 sudo apt-get update
 ```
+If you don't need to install this gcc version, skip a below line :)
 ```ruby
 sudo apt-get install gcc-8 g++-8
 ```
@@ -255,9 +261,12 @@ sudo apt-get install cmake
 ```ruby
 sudo apt update
 ```
+
+## (3). Check the GCC version:
 ```ruby
 ls -l /usr/bin/gcc /usr/bin/g++
 ```
+
 ```ruby
 sudo rm /usr/bin/gcc
 ```
@@ -277,8 +286,7 @@ ls -l /usr/bin/gcc /usr/bin/g++
 sudo apt update
 ```
 
-# CSI 추출 파일 및 카메라 동기화를 위한 OpenCV 설치단계
-
+## (7). Unzip OpenCV for utlizing the USB camera:
 ```ruby
 cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/camera_tool
 ```
@@ -288,6 +296,8 @@ unzip opencv-2.4.13.6.zip
 ```ruby
 cd opencv-2.4.13.6/install
 ```
+
+## (8). Compile and install OpenCV:
 ```ruby
 cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
 ```
@@ -300,27 +310,25 @@ make
 ```ruby
 sudo make install
 ```
+
+## (9). Configuration OpenCV:
 ```ruby
 sudo gedit /etc/ld.so.conf.d/opencv.conf
 ```
-```ruby
-GEDIT에서 아래 한 줄 작성 및 저장
+Then add the /usr/local/lib command to the file.
 ```
-```ruby
-/usr/local/lib
+  /usr/local/lib
 ```
 ```ruby
 sudo ldconfig
 ```
+Then add the following command to the end of the file:
 ```ruby
 sudo gedit /etc/bash.bashrc
 ```
-```ruby
-GEDIT에서 아래 두 줄 작성 및 저장
 ```
-```ruby
-PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
-export PKG_CONFIG_PATH
+  PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
+  export PKG_CONFIG_PATH
 ```
 ```ruby
 sudo reboot
@@ -383,6 +391,11 @@ reboot
 sudo apt-get install gcc make linux-headers-$(uname -r) git-core
 ```
 ```ruby
+sudo apt update
+```
+
+## (4). Build and install the modified wireless LAN driver:
+```ruby
 git clone https://github.com/spanev/linux-80211n-csitool.git
 ```
 ```ruby
@@ -406,6 +419,8 @@ sudo depmod
 ```ruby
 cd ..
 ```
+
+## (5). Install the Modified firmware:
 ```ruby
 git clone https://github.com/dhalperi/linux-80211n-csitool-supplementary.git
 ```
@@ -427,14 +442,18 @@ make -C linux-80211n-csitool-supplementary/netlink
 ```ruby
 cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/supplementary/netlink
 ```
-## GEDIT에서 아래 한 줄 작성 및 저장
 ```ruby
-/usr/local/lib
+sudo gedit /etc/ld.so.conf.d/opencv.conf
+```
+Then add the /usr/local/lib command to the file.
+```
+  /usr/local/lib
 ```
 ```ruby
 make
 ```
-## 해당 과정을 거치고 wifi로부터 CSI데이터를 받을 수 있는지만 체크
+
+## 해당 과정을 거치고 wifi로부터 CSI데이터를 받을 수 있는지만 체크 (가이드 2-1번이 문제 없이 돌아가는가만 확인)
 
 
 
@@ -457,11 +476,9 @@ sudo apt install vlc
 ## Open the installed vlc media player and select your camera device ex)'/dev/vidio0' in 'Capture Device'
 ## Press the play button to check if the camera is operating normally.
 
-## 작동 단계
-
-# 추출 단계
-
-= 와이파이 연결확인
+# 2. Guideline Operation of integrated CSI toolkit
+## (1). setting of the WiFi router and wireless LAN card:
+The below comments (1) only need to be performed once after turning on the computer.
 ```ruby
 iw dev wlp1s0 link
 ```
@@ -471,12 +488,15 @@ sudo modprobe -r iwlwifi mac80211
 ```ruby
 sudo modprobe iwlwifi connector_log=0x1
 ```
+The below comment returns the MAC address, such as XX:XX:XX:XX:XX:XX.
 ```ruby
 sudo ls /sys/kernel/debug/ieee80211/phy0/netdev:wlp1s0/stations/
 ```
+Check the supported modulation, and transmission rate table from the connected WiFi
 ```ruby
 sudo cat /sys/kernel/debug/ieee80211/phy0/netdev:wlp1s0/stations/XX:XX:XX:XX:XX:XX/rate_scale_table
 ```
+Set the transmit rate from the checked table. In our case, we set it as 0x4007 (16-QAM, 1/2).
 ```ruby
 echo 0x4007 | sudo tee /sys/kernel/debug/ieee80211/phy0/netdev:wlp1s0/stations/XX:XX:XX:XX:XX:XX/rate_scale_table
 ```
@@ -486,22 +506,37 @@ echo 0x4007 | sudo tee /sys/kernel/debug/ieee80211/phy0/iwlwifi/iwldvm/debug/bca
 ```ruby
 echo 0x4007 | sudo tee /sys/kernel/debug/ieee80211/phy0/iwlwifi/iwldvm/debug/monitor_tx_rate
 ```
+
+## (2). Starting this toolkit program (utilized three kernel terminals):
 ```ruby
 sudo dhclient wlp1s0
 ```
+comment under kernel terminal, 
 
-##
+where the camera parameters constructed [*Camera ID*] [*Save Interval*] [*Auto Exit*]
 
-[1]
-# On another terminal, type:
-ping 192.168.0.101 -i 0.5
+[*Camera ID*]: This parameter controls which camera to use when the computer has multiple cameras. When set to 0, the program will use the first camera. When set to 1, the program will use the second camera.
 
-[2]
-# On another terminal, type:
-cd IEEE-802.11n-CSI-Camera-Synchronization-Toolkit/supplementary/netlink/log_to_file test.dat
+[*Save Interval*]: This parameter controls the speed at which images are saved. When set to 0, the program will save each frame of the camera. When set to 1, the program will save an image every other frame.
 
-[3]
-# On another terminal, type:
-sudo linux-80211n-csitool-supplementary/netlink/log_to_file csi.dat
+[*Auto Exit*]: This parameter controls whether the program automatically exits when CSI collects stops. When set to 0, This program will always run. When set to 1, This program will automatically exit when no CSI is acquired within 1 second.
 
+
+Open another kernel terminal, where ping testing is a way to encourage the collection of more CSI samples:
+```ruby
+ping 192.xxx.xxx.xxx -i 0.3
 ```
+
+Open the first Linux kernel to execute 'log_to_file':
+```ruby
+cd linux-80211n-csitool-supplementary/netlink
+sudo ./log_to_file test.dat
+```
+
+Open the second Linux kernel and write the below command:
+```ruby
+cd linux-80211n-csitool-supplementary/netlink
+./camera 0 1 0
+```
+
+
