@@ -380,3 +380,94 @@ cd linux-80211n-csitool-supplementary/netlink
 ```
 
 
+######################################################
+######################################################
+######################################################
+
+
+# Open the new kernel terminal
+
+ping 192.168.1.1
+ping 192.168.1.1 -i 0.3
+
+
+######################################################
+# How can we check the 3X3 MIMO communications
+
+# If we can show the terminal result inlcudes "received 573 bytes: id: 26 val: 1 seq: 0 clen: 573". where the 573 bytes is represent a 3X3 MIMO
+# But, if the 273 byes is the 2X2 MIMO communications between the WiFi (TP-Link) and the Intel 5300 NIC.
+######################################################
+
+######################################################
+# In octava or matlab env.
+
+cd /home/chosun/linux-80211n-csitool-supplementary/matlab
+
+csi_trace = read_bf_file('csi.dat')
+extract_csi_sample = csi_trace{1}
+
+
+######################################################
+# How can we install the PC power controller in the Ubuntu
+
+sudo add-apt-repository ppa:slimbook/slimbook
+sudo apt-get update
+sudo apt-get install slimbookbattery
+
+# Afterward, we set the maximum performance with turn off the remain bettery options
+
+
+# How to installation about the automatical control camera 
+
+# step 1. install package
+sudo apt-get install build-essential
+sudo apt-get install libgtk2.0-dev
+sudo apt-get install pkg-config 
+sudo apt-get install cmake
+
+# step 2. Unzip OpenCV
+#  Run commands under CSI-Tool-Camera-Shooting folder:
+unzip opencv-2.4.13.6.zip
+cd opencv-2.4.13.6/install
+
+# step 3. Coplie and install OpenCV
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
+cmake ..
+make
+sudo make install
+
+# Step 4. Configulation OpenCV
+sudo gedit /etc/ld.so.conf.d/opencv.conf
+
+# Then add the /usr/local/lib command to the file.
+sudo ldconfig
+sudo gedit /etc/bash.bashrc
+
+   Then add the following command to the end of file:
+PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
+export PKG_CONFIG_PATH
+Step 5. Reboot and finish install Opencv
+sudo reboot
+
+
+Step 6. Compile User APP [ For Linux 802.11n CSI Tool ]
+Use the netlink folder in this code replace to linux-80211n-csitool-supplementary/netlink folder.
+   Run commands under linux-80211n-csitool-supplementary/netlink folder:
+make
+
+# step 7. Linux 802.11n CSI toolkit
+Parameter: [Camera ID] [Pic Save Interval] [Whether Auto Exit]
+[Camera ID]: This parameter controls which camera to use when the computer has multiple cameras.When set to 0, the program will use the first camera.When set to 1, the program will use the second camera. And so on.
+[Pic Save Interval]: This parameter controls the speed at which images are saved. When set to 0, the program will save each frame of the camera. When set to 1, the program will save an image every other frame. And so on.
+[Whether Auto Exit]: This parameter controls whether the program automatically exits when CSI collect stops.When set to 0,This program will always run. When set to 1,This program will automatically exit when no CSI is acquired within 1 second.
+
+./camera 0 0 1
+
+# Then,Start CSI collection program.The camera program will automatically create a new folder with the same name as your CSI data file and save the image to this folder.
+
+sudo ./recvCSI test.dat
+
+# Warning 1: You must open or restart camera program firstly,Then start running the CSI collect program.
+Warning 2: The program will automatically create a folder to save the image, but cannot be the same as the existing folder name.Otherwise, the program will report an error and automatically exit.
+Warning 3: Not all cameras work properly under Linux .
+
